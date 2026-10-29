@@ -13,6 +13,7 @@ from src.models.inference import batch_predict
 from src.navigation import render_sidebar_navigation
 from src.ui import configure_dashboard_ui, render_page_header
 from src.data.app_data import load_customer_data_or_stop
+from src.models.deployment import ensure_model_artifacts_or_stop
 
 # Page config
 st.set_page_config(
@@ -97,13 +98,11 @@ if st.sidebar.button("Reset Filters"):
 # Display results count
 st.subheader(f"Showing {len(df_filtered)} customers")
 
-# Add predictions if model is available
-models_path = project_root / "models"
-results_path = models_path / "training_results.json"
-
+# Add predictions on request, training models first on fresh deployments.
 add_predictions = st.checkbox("Add Churn Predictions", value=False)
 
-if add_predictions and results_path.exists():
+if add_predictions:
+    ensure_model_artifacts_or_stop(project_root)
     try:
         df_filtered = batch_predict(df_filtered)
         st.success("Predictions added successfully")

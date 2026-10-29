@@ -13,6 +13,7 @@ from src.explainability.shap_explainer import get_explainer, explain_prediction,
 from src.navigation import render_sidebar_navigation
 from src.ui import configure_dashboard_ui, render_page_header
 from src.data.app_data import load_customer_data_or_stop
+from src.models.deployment import ensure_model_artifacts_or_stop
 
 # Page config
 st.set_page_config(
@@ -33,13 +34,8 @@ render_page_header(
 # Load data for reference
 df = load_customer_data_or_stop(project_root)
 
-# Check if model is available
-models_path = project_root / "models"
-results_path = models_path / "training_results.json"
-
-if not results_path.exists():
-    st.error("Model not trained. Please train models first using the Model Lab.")
-    st.stop()
+# Prepare models automatically when running from a fresh deployment.
+ensure_model_artifacts_or_stop(project_root)
 
 # Get unique values for dropdowns
 contract_types = sorted(df["Contract"].unique().tolist())
