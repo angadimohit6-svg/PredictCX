@@ -1,0 +1,96 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environment
+venv/
+env/
+ENV/
+.venv
+.tox/
+.nox/
+site-packages/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Jupyter
+.ipynb_checkpoints
+*.ipynb
+
+# Data
+data/raw/*.csv
+data/processed/*.csv
+*.db
+*.sqlite
+*.sqlite3
+
+# Models
+models/*.pkl
+models/*.joblib
+models/*.json
+models/*.model
+
+# Streamlit
+.streamlit/cache/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Reports
+reports/*.html
+reports/*.pdf
+
+# Secrets
+.env
+.env.*
+!.env.example
+*.env
+.secrets/
+.secrets
+secrets/
+secrets.*
+*secret*
+*credential*
+*password*
+*api_key*
+*apikey*
+*access_token*
+*token*
+*.pem
+*.key
+*.p12
+*.pfx
+*.crt
+*.cer
+id_rsa*
+id_ed25519*
+.aws/
+.ssh/
