@@ -4,6 +4,7 @@ from pathlib import Path
 
 from src.navigation import render_sidebar_navigation
 from src.ui import configure_dashboard_ui, render_page_header
+from src.data.app_data import load_customer_data_or_stop
 
 # Page configuration
 st.set_page_config(
@@ -16,17 +17,13 @@ configure_dashboard_ui()
 
 project_root = Path(__file__).parent
 render_sidebar_navigation(project_root)
+df = load_customer_data_or_stop(project_root)
 
 # Dataset status
 cleaned_data_path = project_root / "data" / "processed" / "telco_customer_churn_clean.csv"
 db_path = project_root / "data" / "processed" / "customer_churn.db"
 
-if cleaned_data_path.exists():
-    import pandas as pd
-    df = pd.read_csv(cleaned_data_path)
-    st.sidebar.success(f"✅ Dataset loaded: {len(df)} customers")
-else:
-    st.sidebar.error("❌ Dataset not found. Please run data ingestion.")
+st.sidebar.success(f"✅ Dataset loaded: {len(df)} customers")
 
 if db_path.exists():
     st.sidebar.success("✅ Database initialized")
@@ -81,23 +78,19 @@ Choose a workspace from the sidebar to get started.
 """)
 
 # Quick stats
-if cleaned_data_path.exists():
-    import pandas as pd
-    df = pd.read_csv(cleaned_data_path)
+col1, col2, col3, col4 = st.columns(4)
 
-    col1, col2, col3, col4 = st.columns(4)
+with col1:
+    st.metric("Total Customers", len(df))
 
-    with col1:
-        st.metric("Total Customers", len(df))
+with col2:
+    churned = (df["Churn"] == "Yes").sum()
+    st.metric("Churned Customers", churned)
 
-    with col2:
-        churned = (df["Churn"] == "Yes").sum()
-        st.metric("Churned Customers", churned)
+with col3:
+    churn_rate = (churned / len(df)) * 100
+    st.metric("Churn Rate", f"{churn_rate:.1f}%")
 
-    with col3:
-        churn_rate = (churned / len(df)) * 100
-        st.metric("Churn Rate", f"{churn_rate:.1f}%")
-
-    with col4:
-        avg_tenure = df["tenure"].mean()
-        st.metric("Avg Tenure", f"{avg_tenure:.1f} months")
+with col4:
+    avg_tenure = df["tenure"].mean()
+    st.metric("Avg Tenure", f"{avg_tenure:.1f} months")

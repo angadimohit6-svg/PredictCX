@@ -16,6 +16,7 @@ from src.database.db_operations import (
 )
 from src.navigation import render_sidebar_navigation
 from src.ui import configure_dashboard_ui, render_page_header
+from src.data.app_data import load_customer_data_or_stop
 
 # Page config
 st.set_page_config(
@@ -32,6 +33,9 @@ render_page_header(
     "SQL Analytics Workspace",
     "Explore customer data with ready-made queries, custom SQL, and validation metrics.",
 )
+
+# Load data and initialize SQLite on first launch if needed.
+df = load_customer_data_or_stop(project_root)
 
 # Check if database exists
 db_path = project_root / "data" / "processed" / "customer_churn.db"
@@ -173,7 +177,6 @@ st.info("Comparing SQL query results with equivalent Python calculations")
 try:
     # Total customers
     sql_total = get_total_customers()
-    df = pd.read_csv(project_root / "data" / "processed" / "telco_customer_churn_clean.csv")
     python_total = len(df)
 
     st.metric("Total Customers (SQL)", sql_total)

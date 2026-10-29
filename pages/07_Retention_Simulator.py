@@ -12,6 +12,7 @@ sys.path.insert(0, str(project_root))
 from src.analytics.metrics import calculate_retention_scenario
 from src.navigation import render_sidebar_navigation
 from src.ui import configure_dashboard_ui, render_page_header
+from src.data.app_data import load_customer_data_or_stop
 
 # Page config
 st.set_page_config(
@@ -30,18 +31,7 @@ render_page_header(
 )
 
 # Load data for context
-@st.cache_data
-def load_data():
-    cleaned_path = project_root / "data" / "processed" / "telco_customer_churn_clean.csv"
-    if not cleaned_path.exists():
-        st.error("Dataset not found. Please run data ingestion first.")
-        return None
-    return pd.read_csv(cleaned_path)
-
-df = load_data()
-
-if df is None:
-    st.stop()
+df = load_customer_data_or_stop(project_root)
 
 # Scenario parameters
 st.header("Scenario Parameters")
